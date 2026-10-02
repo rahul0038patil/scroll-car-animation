@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>W E L C O M E  I T Z F I Z Z | Scroll-Driven Hero Animation</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: #ffffff;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+    .track-wrapper {
+      width: 100vw;
+      height: 190px;
+      background-color: #1e1e1e;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+    .car-top-down {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 10;
+      will-change: transform;
+    }
+    .trail-fill {
+      height: 100%;
+      background-color: #1e40af;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 0%;
+    }
+    .stat-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container" class="min-h-screen w-full bg-[#121212] text-white flex flex-col justify-between py-6 px-0 box-border select-none overflow-x-hidden">
+    
+    <div class="flex flex-col items-center text-center mt-2 px-6 max-w-5xl mx-auto w-full">
+      <h1 id="headline" class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-[0.15em] sm:tracking-[0.25em] uppercase text-white my-6 opacity-0 whitespace-nowrap">
+        W E L C O M E &nbsp; I T Z F I Z Z
+      </h1>
+
+      <div id="stats" class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-4xl my-4 text-center">
+        <div class="stat-box opacity-0 p-4 rounded-xl bg-white/5 border border-white/10">
+          <div class="text-3xl font-extrabold text-[#60a5fa]">98%</div>
+          <div class="text-xs text-gray-300 font-medium mt-1">Satisfaction Rate</div>
+        </div>
+        <div class="stat-box opacity-0 p-4 rounded-xl bg-white/5 border border-white/10">
+          <div class="text-3xl font-extrabold text-[#60a5fa]">5.0x</div>
+          <div class="text-xs text-gray-300 font-medium mt-1">Speed Multiplier</div>
+        </div>
+        <div class="stat-box opacity-0 p-4 rounded-xl bg-white/5 border border-white/10">
+          <div class="text-3xl font-extrabold text-[#60a5fa]">250k+</div>
+          <div class="text-xs text-gray-300 font-medium mt-1">Active Users</div>
+        </div>
+        <div class="stat-box opacity-0 p-4 rounded-xl bg-white/5 border border-white/10">
+          <div class="text-3xl font-extrabold text-[#60a5fa]">99.9%</div>
+          <div class="text-xs text-gray-300 font-medium mt-1">System Uptime</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="my-auto py-4 w-full relative">
+      <div class="flex items-center justify-between text-xs text-gray-400 mb-2 px-8 font-mono max-w-5xl mx-auto">
+        <span>SCROLL PROGRESS</span>
+        <span id="progressVal" class="text-[#60a5fa] font-bold">0%</span>
+      </div>
+
+      <div id="track" class="track-wrapper flex items-center">
+        <div id="trail" class="trail-fill"></div>
+        <div id="car" class="car-top-down flex items-center justify-center">
+          <img src="top-down-car.png" alt="Top Down Car" class="h-full w-auto object-contain py-1" />
+        </div>
+      </div>
+    </div>
+
+    <div id="footerText" class="text-center pb-2 text-xs text-gray-500 font-mono px-6">
+      ↓ SCROLL TO DRIVE CAR & UNLOCK METRICS
+    </div>
+
+  </div>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.fromTo("#headline", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out" });
+
+    const track = document.getElementById("track");
+    const car = document.getElementById("car");
+    const trail = document.getElementById("trail");
+    const progressVal = document.getElementById("progressVal");
+    const footerText = document.getElementById("footerText");
+
+    const tlScroll = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#container",
+        start: "top top",
+        end: "+=1800",
+        pin: true,
+        scrub: 0.5,
+        onUpdate: (self) => {
+          const p = Math.round(self.progress * 100);
+          progressVal.innerText = p + "%";
+          if (p >= 100) footerText.innerText = "🏁 FINISH LINE REACHED";
+          else footerText.innerText = "↓ SCROLL TO DRIVE CAR & UNLOCK METRICS";
+        }
+      }
+    });
+
+    tlScroll.fromTo(
+      car,
+      { x: 0 },
+      { x: () => track.offsetWidth - (car.offsetWidth / 2), duration: 1, ease: "none" },
+      0
+    );
+
+    tlScroll.fromTo(
+      trail,
+      { width: "0%" },
+      { width: "100%", duration: 1, ease: "none" },
+      0
+    );
+
+    const statCards = document.querySelectorAll("#stats > div");
+    const milestonePositions = [0.10, 0.35, 0.60, 0.85];
+    statCards.forEach((card, idx) => {
+      tlScroll.fromTo(
+        card,
+        { opacity: 0, y: 25, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.12, ease: "power1.out" },
+        milestonePositions[idx] || 0
+      );
+    });
+  </script>
+</body>
+</html>
