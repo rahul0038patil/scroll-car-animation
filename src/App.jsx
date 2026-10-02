@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import carImage from './assets/top-down-car.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -120,7 +121,7 @@ export default function App() {
 
           <div ref={carRef} className="car-top-down flex items-center justify-center">
             <img 
-              src="/top-down-car.png" 
+              src={carImage} 
               alt="Top Down Car" 
               className="h-full w-auto object-contain py-1"
             />
